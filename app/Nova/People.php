@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -50,8 +51,6 @@ class People extends Resource
             Text::make(__('Name'))
                 ->rules('required'),
 
-            Boolean::make(__('Contract'), 'is_contract'),
-
             Hidden::make('user_id')
                 ->default($request->user()->id),
 
@@ -65,6 +64,8 @@ class People extends Resource
 
             BelongsTo::make(__('Created By'), 'user', User::class)
                 ->onlyOnDetail(),
+
+            HasOne::make(__('Employee')),
         ];
     }
 

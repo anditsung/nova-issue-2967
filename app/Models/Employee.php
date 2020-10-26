@@ -12,7 +12,7 @@ class Employee extends Model
     use HasFactory;
 
     protected $fillable = [
-        'person_id',
+        'people_id',
         'is_contract',
         'user_id',
     ];
@@ -22,7 +22,7 @@ class Employee extends Model
         return $this->hasMany(Contract::class);
     }
 
-    public function person() : BelongsTo
+    public function people() : BelongsTo
     {
         return $this->belongsTo(People::class);
     }

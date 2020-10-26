@@ -3,7 +3,10 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -25,7 +28,7 @@ class Employee extends Resource
     //public static $title = 'id';
     public function title()
     {
-        return $this->person->name;
+        return $this->people->name;
     }
 
     /**
@@ -49,16 +52,33 @@ class Employee extends Resource
             ID::make(__('ID'), 'id')->sortable(),
 
             Text::make(__('Name'), function () {
-                return $this->person->name;
+                return $this->people->name;
             }),
+
+            BelongsTo::make(__('People'), 'people', People::class)
+                ->searchable(),
+
+            Hidden::make('user_id')
+                ->default($request->user()->id),
+
+            DateTime::make(__('Created At'))
+                ->format('DD MMMM Y, hh:mm:ss A')
+                ->onlyOnDetail(),
+
+            DateTime::make(__('Updated At'))
+                ->format('DD MMMM Y, hh:mm:ss A')
+                ->onlyOnDetail(),
+
+            BelongsTo::make(__('Created By'), 'user', User::class)
+                ->onlyOnDetail(),
 
             /** RELATION */
 
-            $this->when( $this->is_contract, function () {
-                return HasMany::make(__('Contracts'), 'contracts', Contract::class);
-            }),
+//            $this->when( $this->is_contract, function () {
+//                return HasMany::make(__('Contracts'), 'contracts', Contract::class);
+//            }),
 
-//            HasMany::make(__('Contracts'), 'contracts', Contract::class),
+            HasMany::make(__('Contracts'), 'contracts', Contract::class),
         ];
     }
 
